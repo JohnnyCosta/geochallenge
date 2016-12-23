@@ -1,0 +1,13 @@
+apply plugin: 'scala'
+
+group 'org.gc'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.scala-lang:scala-library:2.12.1'
+    compile group: 'org.yaml', name: 'snakeyaml', version: '1.17'
+}

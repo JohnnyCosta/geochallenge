@@ -1,0 +1,12 @@
+
+output:
+  folder: "/tmp"
+  file: "output.csv"
+
+data:
+  folder: "data/"
+  file: "optd-sample-20161201.csv.gz"
+
+input:
+  folder: "input/"
+  file: "sample_data.csv.gz"
