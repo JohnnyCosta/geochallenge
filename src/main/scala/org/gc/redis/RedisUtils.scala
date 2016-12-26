@@ -1,7 +1,9 @@
-package org.gc.utils
+package org.gc.redis
 
 import com.redis.RedisClientPool
 import com.typesafe.scalalogging.Logger
+
+import scala.io.Source
 
 /**
   * Redis utils
@@ -13,9 +15,10 @@ object RedisUtils {
 
   val log = Logger("RedisUtils")
 
-  def connect(host: String, port: Integer) = new RedisClientPool(host, port)
+  def redisClient(host: String, port: Integer) = new RedisClientPool(host, port)
 
-  def pushToRedisGeoFromLines(lines: Iterator[String], connection: RedisClientPool) = {
+  def redisAddGeoDataFromLines(input: Source, connection: RedisClientPool, skipHeader: Boolean = true) = {
+    val lines = if (skipHeader==true) input.getLines().drop(1) else input.getLines()
     connection.withClient {
       client => {
         lines.foreach(line => {
@@ -26,7 +29,7 @@ object RedisUtils {
     }
   }
 
-  def redisCalculateDistance(lat: Double, lon: Double, rad: Double, connection: RedisClientPool) = {
+  def redisCalculate(lat: Double, lon: Double, rad: Double, connection: RedisClientPool) = {
     RedisUtils.findByRadius(lat, lon, rad, connection) match {
       case Some(list) => {
         if (list.size == 1) {

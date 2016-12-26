@@ -1,4 +1,4 @@
-package org.gc.utils
+package org.gc.io
 
 import java.io.{FileOutputStream, InputStream, OutputStream}
 import java.util.zip.{GZIPInputStream, GZIPOutputStream}
@@ -25,7 +25,7 @@ object FileUtils {
 
   def readGZIPFile(name: String): Source = fromInputStream(new GZIPInputStream(readFromResource(name)))
 
-  def generateCoordinatesFromLines(input: Source, skipHeader: Boolean) = {
+  def generateCoordinatesFromLines(input: Source, skipHeader: Boolean = true) = {
     val lines = if (skipHeader==true) input.getLines().drop(1) else input.getLines()
     lines map (line => {
       val Array(id, lat, lon) = line.split(",").map(_.trim)
@@ -33,9 +33,9 @@ object FileUtils {
     })
   }
 
-  def writeTo(name: String): OutputStream = new FileOutputStream(name)
+  def writeTo(path: String): OutputStream = new FileOutputStream(path)
 
-  def writeToGZIPFile(name: String): OutputStream = new GZIPOutputStream(writeTo(name))
+  def writeToGZIPFile(path: String): OutputStream = new GZIPOutputStream(writeTo(path))
 
   def writeLines(lines: ParSeq[String], outStream: OutputStream) {
     lines.foreach(line => {
