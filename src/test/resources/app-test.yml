@@ -4,13 +4,13 @@ redis:
   geoCalcRadius: 10.0
 
 output:
-  folder: "/home/joao/IdeaProjects/geochallenge/out/"
+  folder: "/tmp/"
   file: "output.csv.gz"
 
 data:
   folder: "data/"
-  file: "optd-sample-20161201.csv.gz"
+  file: "data.csv.gz"
 
 input:
   folder: "input/"
-  file: "sample_data.csv.gz"
+  file: "input.csv.gz"
