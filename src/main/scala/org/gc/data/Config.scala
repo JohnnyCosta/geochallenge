@@ -12,6 +12,7 @@ import scala.beans.BeanProperty
 class Redis (){
   @BeanProperty var host: String = null
   @BeanProperty var port: Integer = null
+  @BeanProperty var distance: String = null
 }
 
 class FileFolder() {

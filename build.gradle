@@ -1,4 +1,6 @@
 apply plugin: 'scala'
+apply plugin: 'java'
+apply plugin: 'application'
 
 group 'org.gc'
 version '1.0-SNAPSHOT'
@@ -7,6 +9,17 @@ repositories {
     mavenCentral()
 }
 
+mainClassName = "org.gc.Bootstrap"
+
+jar {
+    manifest {
+        attributes "Main-Class": "$mainClassName"
+    }
+
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
 
 dependencies {
     compile 'org.scala-lang:scala-library:2.11.7'
