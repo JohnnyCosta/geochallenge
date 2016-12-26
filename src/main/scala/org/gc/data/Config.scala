@@ -9,6 +9,10 @@ import scala.beans.BeanProperty
   *
   */
 
+class Redis (){
+  @BeanProperty var host: String = null
+  @BeanProperty var port: Integer = null
+}
 
 class FileFolder() {
   @BeanProperty var folder: String = null
@@ -19,4 +23,5 @@ class Config() {
   @BeanProperty var output: FileFolder = null
   @BeanProperty var input: FileFolder = null
   @BeanProperty var data: FileFolder = null
+  @BeanProperty var redis: Redis = null
 }
