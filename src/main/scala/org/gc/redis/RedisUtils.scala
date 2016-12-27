@@ -2,6 +2,7 @@ package org.gc.redis
 
 import com.redis.RedisClientPool
 import com.typesafe.scalalogging.Logger
+import org.gc.data.Coordinate
 
 import scala.io.Source
 
@@ -17,20 +18,26 @@ object RedisUtils {
 
   def redisClient(host: String, port: Integer) = new RedisClientPool(host, port)
 
-  def redisAddGeoDataFromLines(input: Source, connection: RedisClientPool, skipHeader: Boolean = true) = {
-    val lines = if (skipHeader==true) input.getLines().drop(1) else input.getLines()
+  def redisAddGeoCoords(key: String, coords: Iterator[Coordinate], connection: RedisClientPool, skipHeader: Boolean = true) = {
     connection.withClient {
       client => {
-        lines.foreach(line => {
-          val Array(id, lat, long) = line.split(",").map(_.trim)
-          client.geoadd("APP", Seq((long.toFloat, lat.toFloat, id)))
+        coords.foreach(coord => {
+          client.geoadd(key, Seq((coord.lon, coord.lat, coord.id)))
         })
       }
     }
   }
 
-  def redisCalculate(lat: Double, lon: Double, rad: Double, connection: RedisClientPool) = {
-    RedisUtils.findByRadius(lat, lon, rad, connection) match {
+  def redisCoordByKey(key: String,name:String, connection: RedisClientPool) = {
+    connection.withClient {
+      client => {
+        client.geopos(key,name)
+      }
+    }
+  }
+
+  def redisCalculate(key: String, lat: Double, lon: Double, rad: Double, connection: RedisClientPool) = {
+    RedisUtils.findByRadius(key, lat, lon, rad, connection) match {
       case Some(list) => {
         if (list.size == 1) {
           val res = list.toList
@@ -43,10 +50,10 @@ object RedisUtils {
     }
   }
 
-  private def findByRadius(lat: Double, lon: Double, rad: Double, connection: RedisClientPool) = {
+  private def findByRadius(key: String, lat: Double, lon: Double, rad: Double, connection: RedisClientPool) = {
     connection.withClient {
       client => {
-        client.georadius("APP", lon, lat, rad, "km", false, false, false, Some(1), None, None, None)
+        client.georadius(key, lon, lat, rad, "km", false, false, false, Some(1), None, None, None)
       }
     }
   }

@@ -13,6 +13,7 @@ class Redis (){
   @BeanProperty var host: String = null
   @BeanProperty var port: Integer = null
   @BeanProperty var geoCalcRadius: String = null
+  @BeanProperty var key: String = null
 }
 
 class FileFolder() {

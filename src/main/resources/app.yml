@@ -2,6 +2,7 @@ redis:
   host: localhost
   port: 6379
   geoCalcRadius: 10.0
+  key: "APP"
 
 output:
   folder: "/home/joao/IdeaProjects/geochallenge/out/"

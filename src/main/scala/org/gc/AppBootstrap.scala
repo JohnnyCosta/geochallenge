@@ -1,8 +1,8 @@
 package org.gc
 
 import com.typesafe.scalalogging.Logger
-import org.gc.process.DistanceCalculator.processGeoDistance
 import org.gc.io.FileUtils._
+import org.gc.process.DistanceCalculator.processGeoDistance
 import org.gc.redis.RedisUtils._
 
 /**
@@ -21,18 +21,21 @@ object AppBootstrap extends App {
 
   val dataPath = config.data.folder + config.data.file
   log.info("Adding data from '{}' to redis", dataPath)
-  redisAddGeoDataFromLines(readGZIPFile(dataPath), redis)
+  val dataCoords = generateCoordinatesFromLines(readGZIPFile(dataPath))
+  redisAddGeoCoords(config.redis.key, dataCoords, redis)
 
   val inputPath = config.input.folder + config.input.file
   log.info("Read all inputs from '{}'", inputPath)
-  val coords = generateCoordinatesFromLines(readGZIPFile(inputPath))
+  val inCoords = generateCoordinatesFromLines(readGZIPFile(inputPath))
 
   log.info("Calculating distances")
   val radius = config.redis.geoCalcRadius.toDouble
+
   def redisCal = (lat: Double, lon: Double, rad: Double) => {
-    redisCalculate(lat, lon, rad, redis)
+    redisCalculate(config.redis.key, lat, lon, rad, redis)
   }
-  val outLines = processGeoDistance(coords, radius)(redisCal)
+
+  val outLines = processGeoDistance(inCoords, radius)(redisCal)
 
   val outputPath = config.output.folder + config.output.file
   val output = writeToGZIPFile(outputPath)
