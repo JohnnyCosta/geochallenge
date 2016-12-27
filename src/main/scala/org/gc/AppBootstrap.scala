@@ -25,16 +25,14 @@ object AppBootstrap extends App {
   redisAddGeoCoords(config.redis.key, dataCoords, redis)
 
   val inputPath = config.input.folder + config.input.file
-  log.info("Read all inputs from '{}'", inputPath)
+  log.info("Read inputs from '{}'", inputPath)
   val inCoords = generateCoordinatesFromLines(readGZIPFile(inputPath))
 
   log.info("Calculating distances")
   val radius = config.redis.geoCalcRadius.toDouble
-
   def redisCal = (lat: Double, lon: Double, rad: Double) => {
     redisCalculate(config.redis.key, lat, lon, rad, redis)
   }
-
   val outLines = processGeoDistance(inCoords, radius)(redisCal)
 
   val outputPath = config.output.folder + config.output.file

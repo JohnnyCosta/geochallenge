@@ -16,8 +16,8 @@ object DistanceCalculator {
   def processGeoDistance(inputCoords: Iterator[Coordinate], radius: Double)
                         (calc: (Double, Double, Double) => String) = {
     // Process in parallel
-    inputCoords.toList.par map (input => {
-      input.id + "," + calc(input.lat, input.lon, radius) + "\n"
+    inputCoords.toStream.par map (coord => {
+      coord.id + "," + calc(coord.lat, coord.lon, radius) + "\n"
     })
-  }
+ }
 }

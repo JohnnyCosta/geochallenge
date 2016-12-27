@@ -5,7 +5,7 @@ import scala.beans.BeanProperty
 /**
   * YML configuration data object
   *
-  * @author : Joao Costa (joaocarlosfilho@gmail.com) on 23/12/2016.
+  * @author : Joao Costa (joaocarlosfilho@gmail.com) on 26/12/16.
   *
   */
 
